@@ -1,0 +1,72 @@
+create table employee (employee_name varchar(30) primary key,street varchar(20), city varchar(20));
+
+insert into employee values('Jeswin','Kadamanitta','Pathanamthitta');
+insert into employee values('Ashwin','Pattam','Trivandrum');
+insert into employee values('Arun','Mavelikara','Mavelikara');
+insert into employee values('Sreedeep','Thazhakazha','Mavelikara');
+
+select * from employee;
+
+create table Works (employee_name varchar(30) primary key,Company_name varchar(20), Salary number);
+
+
+insert into Works values('Jeswin','Walkaro','15000');
+insert into Works values('Ashwin','Infosys','25000');
+insert into Works values('Arun','ABC','20000');
+insert into Works values('Sreedeep','Nike','30000');
+
+select * from Works;
+
+create table Company(Company_name varchar(30) primary key,city varchar(20));
+
+
+insert into Company values('Walkaro','Pathanamthitta');
+insert into Company values('Infosys','Trivandrum');
+insert into Company values('ABC','Mavelikara');
+insert into Company values('Nike','Ernakulam');
+
+
+select * from Company;
+
+
+create table Manager (employee_name varchar(30) primary key,Manager_name varchar(20));
+
+insert into Manager values('Jeswin','Sivapanicker');
+insert into Manager values('Infosys','Ashiq');
+insert into Manager values('ABC','Ramachandran');
+insert into Manager values('Nike','Kuttanpilla');
+
+select * from Manager;
+
+select employee_name from Works Where Company_name='ABC';
+
+select e.employee_name,city from employee e, Works W where W.Company_name='ABC' and W.employee_name=e.employee_name;
+
+select * from employee where employee_name in(select employee_name from Works where Company_name='ABC' and salary>10000);
+
+select e.employee_name from employee e ,Works W, Company C where e.employee_name = W.employee_name and e.city =C.city and  W.Company_name=C.Company_name;
+
+select P.employee_name from employee P,employee R,Manager M where P.employee_name=M.employee_name and M.Manager_name=R.employee_name and P.street = R.street and P.city=R.city;
+
+select employee_name from Works where Company_name<>'ABC';
+
+select employee_name from Works where salary>all(select salary from Works where Company_name='ABC');
+
+select employee_name from Works T where salary>(select avg(salary) from Works S where T.Company_name=S.Company_name);
+
+select Company_name from Works group by Company_name having count (distinct employee_name) >= all (select count(distinct(employee_name)) from Works group by Company_name);
+
+select Company_name from Works group by Company_name having sum(salary)<=all(select sum(salary) from Works group by Company_name);
+
+select Company_name from Works group by Company_name having avg(Salary)>(select avg(salary)from Works where Company_name= 'ABC');
+
+update employee set city='Bhopal' where employee_name='Ravi';
+
+update Works set salary=salary*1.1 where Company_name ='ABC';
+
+update Works set salary =salary*1.1 where employee_name in (select Manager_name from Manager) and Company_name='ABC';
+
+delete Works where Company_name='ABC';
+
+
+
